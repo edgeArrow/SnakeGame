@@ -20,12 +20,13 @@ public class GameField extends JPanel implements ActionListener {
 
     private int snakeSize;
     private Timer timer;
-    private int timerInterval = 100;
+    private int timerInterval = 250;
     private boolean left = false;
     private boolean right = true;
     private boolean up = false;
     private boolean down = false;
     private boolean inGame = true;
+    private boolean checkGame = true;
 
     public GameField()
     {
@@ -68,6 +69,12 @@ public class GameField extends JPanel implements ActionListener {
 
         if (inGame)
         {
+            if (snakeSize == ALL_DOTS)
+            {
+                String winText = "You Win!";
+                g.setColor(Color.white);
+                g.drawString(winText, 125, SIZE / 2);
+            }
             g.drawImage(apple, appleX, appleY, this);
 
             for (int i = 0; i < snakeSize; i++) {
@@ -113,6 +120,18 @@ public class GameField extends JPanel implements ActionListener {
         {
             snakeSize++;
             createApple();
+            if (timerInterval >= 120)
+            {
+                timer.setDelay(timerInterval -= 5);
+            }
+            else if (timerInterval >= 100)
+            {
+                timer.setDelay(timerInterval -= 2.5);
+            }
+            else if (timerInterval > 50)
+            {
+                timer.setDelay(timerInterval -= 2);
+            }
         }
     }
 
@@ -186,6 +205,17 @@ public class GameField extends JPanel implements ActionListener {
                 down = true;
                 left = false;
                 right = false;
+            }
+
+            if (checkGame == true && key == KeyEvent.VK_ESCAPE)
+            {
+                timer.stop();
+                checkGame = false;
+            }
+            else if (checkGame == false && key == KeyEvent.VK_ESCAPE)
+            {
+                timer.start();
+                checkGame = true;
             }
         }
     }
